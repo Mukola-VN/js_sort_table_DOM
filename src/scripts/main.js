@@ -1,35 +1,40 @@
 'use strict';
-
-// write code here
-
+// витягнув елемент 
 const table = document.querySelector('tbody');
 const th = document.querySelectorAll('th');
 
+
+
 th.forEach((thItem, thIndex) => {
   thItem.addEventListener('click', () => {
+    //перетворюю на масив
     const rows = Array.from(table.querySelectorAll('tr'));
 
     rows.sort((a, b) => {
-      const cellAValue = a.cells[thIndex].textContent.trim();
-      const cellBValue = b.cells[thIndex].textContent.trim();
+      const cellA = a.cells[thIndex].textContent.trim();
+      const cellB = b.cells[thIndex].textContent.trim();
 
-      return cellAValue.localeCompare(cellBValue);
+      // ось тут перетворюю текст на число через parseFloat
+      const numA = parseFloat(cellA);
+      const numB = parseFloat(cellB);
+
+      //isNaN(value) повертає true, якщо змінна не число
+      /*!isNaN(value) = true якщо значення — число */
+
+      const isNumberA = !isNaN(numA);
+      const isNumberB = !isNaN(numB);
+      
+      // Якщо обидва значення числа → сортуємо числово
+      if (isNumberA && isNumberB) {
+        return numA - numB;
+      }
+
+      // Інакше сортуємо як строки
+      return cellA.localeCompare(cellB);
     });
 
-    rows.sort((a, b) => {
-      const numA = parseFloat(a.cells[thIndex].textContent.trim());
-      const numB = parseFloat(b.cells[thIndex].textContent.trim());
-
-      return numA - numB; // від меншого до більшого
-    });
-
-    // Очищаємо tbody
+    // Очищаємо tbody та додаємо нові рядки
     table.innerHTML = '';
-
-    // Додаємо відсортовані рядки
-    rows.forEach((row) => {
-      table.appendChild(row);
-    });
+    rows.forEach(row => table.appendChild(row));
   });
 });
-
